@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Patatap Clone</title>
+    <script type="text/javascript" src="assets/js/lib/paper-full.js"></script>
+    <script type="text/javascript" src="assets/js/lib/howler.js"></script>
+    <script type="text/javascript" src="assets/js/keyData.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <script type="text/paperscript" canvas="myCanvas">
+      // keyData source code is at assets/js/keyData.js
+      var circles = [];
+
+      function onKeyDown(event) {
+        // check if a key pressed is within keyData set (only alphabet)
+        if(keyData[event.key]){
+          var maxPoint = new Point(view.size.width, view.size.height);
+          var randomPoint = Point.random();
+          var point = maxPoint * randomPoint; // random point
+          var newCircle = new Path.Circle(point, 500)
+          newCircle.fillColor = keyData[event.key].color;
+          keyData[event.key].sound.play();
+          circles.push(newCircle);
+        }
+      }
+
+      // animation
+      function onFrame(event){
+        for(var i = 0; i < circles.length; i++){
+          // diminishing circle effet
+          circles[i].scale(0.9);
+          // changing color hue effect
+          circles[i].fillColor.hue += 1;
+          // remove from array when not visible
+          if(circles[i].area < 1){
+            circles[i].remove(); // remove the circle from the canvas
+            circles.splice(i, 1); // remove the circle from the array
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <canvas id="myCanvas" resize></canvas>
+  </body>
+</html>
